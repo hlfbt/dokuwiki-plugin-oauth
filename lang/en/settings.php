@@ -14,3 +14,5 @@ $lang['singleService'] = 'Login with single oAuth service only (disables local l
 $lang['singleService_o_'] = 'Allow all services';
 $lang['register-on-auth'] = 'Register authenticated users even if self-registration is disabled in main configuration';
 $lang['overwrite-groups'] = 'Overwrite all DokuWiki user groups by those supplied by provider';
+$lang['user-linking-claims'] = 'Additional user linking mappings, comma-separated (e.g. <code>nickname:user, preferred_username:user</code>). Defines which Oauth claim should be matched against which Dokuwiki user field.';
+$lang['disable-mail-linking'] = 'Disable user linking via mail field.';

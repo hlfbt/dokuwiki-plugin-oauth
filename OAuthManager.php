@@ -234,7 +234,11 @@ class OAuthManager
         global $auth;
 
         // see if the user is known already
-        $localUser = $auth->getUserByEmail($userdata['mail']);
+        $localUser = $auth->getUserByCustomClaims($userdata);
+        if (!$localUser && !$auth->getConf('disable-mail-linking')) {
+            $localUser = $auth->getUserByEmail($userdata['mail']);
+        }
+
         if ($localUser) {
             $localUserInfo = $auth->getUserData($localUser);
             $localUserInfo['user'] = $localUser;
