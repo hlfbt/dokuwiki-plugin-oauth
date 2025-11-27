@@ -1,0 +1,5 @@
+Plugin directory:  @dokuwiki-plugin-oauth 
+
+Extend this DokuWiki plugin with additional user fields that can be persisted. The persistence should be handled similar to how DokuWikis plainauth plugin handles "protected" users, i.e. by writing to a new file (adjacent to the users.auth.php) named users.extras.php. The additional (or "extra") user fields may be arbitrary, and as such must be saved together with their name. Handling of the loading and writing of these additional fields should be performed in a new helper class and only loosely coupled to the core oauth plugin classes. Loaded additional fields should be merged into the user object and must remain flat. Their keys in the user object should be prefixed with a string clearly identifying them as additional fields, f.i. "extras.<fieldname>".
+Additional user fields must be backwards compatible to DokuWikis bundled plainauth plugin, which should not break and simply ignore the new additional fields.
+Output the commands needed to create a new feature branch for these changes and commit in appropriate intervals. Use the guidelines depicted in  @.__local.git-commit-guidelines.md  for the commits.
