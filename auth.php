@@ -1,5 +1,6 @@
 <?php
 
+use dokuwiki\plugin\oauth\UserExtrasManager;
 use dokuwiki\plugin\oauth\OAuthManager;
 use dokuwiki\plugin\oauth\Session;
 use dokuwiki\Subscriptions\RegistrationSubscriptionSender;
@@ -19,6 +20,9 @@ class auth_plugin_oauth extends auth_plugin_authplain
     /** @var OAuthManager */
     protected $om;
 
+    /** @var UserExtrasManager */
+    protected $userExtrasManager;
+
     // region standard auth methods
 
     /** @inheritDoc */
@@ -27,6 +31,13 @@ class auth_plugin_oauth extends auth_plugin_authplain
         parent::__construct();
         $this->cando['external'] = true;
         $this->hlp = $this->loadHelper('oauth');
+        $this->userExtrasManager = new UserExtrasManager();
+    }
+
+    public function loadUserData()
+    {
+        parent::loadUserData();
+        $this->userExtrasManager->mergeAllUsersExtras($this->users);
     }
 
     /** @inheritDoc */
@@ -109,9 +120,21 @@ class auth_plugin_oauth extends auth_plugin_authplain
         }
 
         $ok = parent::modifyUser($user, $changes);
+        if ($ok) {
+            $this->userExtrasManager->saveUserExtras($user, $changes);
+        }
 
         // refresh session cache
         touch($conf['cachedir'] . '/sessionpurge');
+        return $ok;
+    }
+
+    public function deleteUsers($users)
+    {
+        $ok = parent::deleteUsers($users);
+        if ($ok) {
+            $this->userExtrasManager->deleteUsersExtras($users);
+        }
         return $ok;
     }
 
@@ -159,6 +182,8 @@ class auth_plugin_oauth extends auth_plugin_authplain
         $groups_on_creation[] = $conf['defaultgroup'];
         $groups_on_creation[] = $this->cleanGroup($servicename); // add service as group
         $userinfo['grps'] = array_merge((array)$userinfo['grps'], $groups_on_creation);
+
+        $this->userExtrasManager->saveUserExtras($user, $userinfo);
 
         // the password set here will remain unknown to the user
         $ok = $this->triggerUserMod(

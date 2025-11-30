@@ -285,7 +285,7 @@ abstract class Adapter extends ActionPlugin
     /**
      * Retrieve the user's data via API
      *
-     * The returned array needs to contain at least 'email', 'name', 'user' and optionally 'grps'
+     * The returned array needs to contain at least 'email', 'name', 'user' and optionally 'grps' and 'extras'
      *
      * Use the request() method of the oauth object to talk to the API
      *
