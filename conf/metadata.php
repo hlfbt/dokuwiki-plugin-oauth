@@ -14,3 +14,5 @@ $meta['mailEnforcement']     = array('string','_pattern' => '!^(@[^,@]+(\.[^,@]+
 $meta['singleService']       = array('onoff');
 $meta['register-on-auth']    = array('onoff','_caution' => 'security');
 $meta['overwrite-groups']    = array('onoff','_caution' => 'danger');
+$meta['user-linking-claims'] = array('string');
+$meta['disable-mail-linking'] = array('onoff');

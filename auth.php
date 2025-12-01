@@ -228,6 +228,45 @@ class auth_plugin_oauth extends auth_plugin_authplain
     }
 
     /**
+     * Find a user by a custom claim
+     *
+     * @param array $claims
+     * @return false|string
+     */
+    public function getUserByCustomClaims($claims)
+    {
+        $linkingClaims = $this->getConf('user-linking-claims');
+        if (empty($linkingClaims)) {
+            return false;
+        }
+
+        if ($this->users === null) {
+            $this->loadUserData();
+        }
+
+        $mappings = array_map('trim', explode(',', $linkingClaims));
+        foreach ($mappings as $mapping) {
+            list($claimName, $userField) = array_map('trim', explode(':', $mapping));
+            if (empty($claimName) || empty($userField) || empty($claims[$claimName])) {
+                continue;
+            }
+
+            $claimValue = strtolower($claims[$claimName]);
+
+            foreach ($this->users as $user => $userinfo) {
+                if (
+                    !empty($userinfo[$userField])
+                    && strtolower($userinfo[$userField]) === $claimValue
+                ) {
+                    return $user;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Fall back to plain auth strings
      *
      * @inheritdoc
