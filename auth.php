@@ -252,15 +252,21 @@ class auth_plugin_oauth extends auth_plugin_authplain
             }
 
             $claimValue = strtolower($claims[$claimName]);
+            $isExtrasField = str_starts_with($userField, UserExtrasManager::USER_EXTRAS_KEY . '.');
+            if ($isExtrasField) {
+                $userField = substr($userField, strlen(UserExtrasManager::USER_EXTRAS_KEY) + 1);
+            }
 
             foreach ($this->users as $user => $userinfo) {
-                // simple check for extras without full dot notation support
-                // alternative: move DotAccess from oauthgeneric to oauth for full dot notation support?
-                if (str_starts_with($userField, UserExtrasManager::USER_EXTRAS_KEY . '.')) {
+                if (!$isExtrasField && $userField === 'user' && $claimValue === $user) {
+                    return $user;
+                }
+
+                if ($isExtrasField) {
                     $userinfo = $this->userExtrasManager->extractExtras($userinfo);
                 }
-                if (!empty($userinfo[$userField])
-                    && strtolower($userinfo[$userField]) === $claimValue)
+
+                if (!empty($userinfo[$userField]) && strtolower($userinfo[$userField]) === $claimValue)
                 {
                     return $user;
                 }
