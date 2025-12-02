@@ -183,8 +183,6 @@ class auth_plugin_oauth extends auth_plugin_authplain
         $groups_on_creation[] = $this->cleanGroup($servicename); // add service as group
         $userinfo['grps'] = array_merge((array)$userinfo['grps'], $groups_on_creation);
 
-        $this->userExtrasManager->saveUserExtras($user, $userinfo);
-
         // the password set here will remain unknown to the user
         $ok = $this->triggerUserMod(
             'create',
@@ -199,6 +197,8 @@ class auth_plugin_oauth extends auth_plugin_authplain
         if (!$ok) {
             return false;
         }
+
+        $this->userExtrasManager->saveUserExtras($user, $userinfo);
 
         // send notification about the new user
         $subscriptionSender = new RegistrationSubscriptionSender();
