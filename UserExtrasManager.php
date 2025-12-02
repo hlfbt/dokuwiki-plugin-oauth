@@ -130,10 +130,10 @@ class UserExtrasManager
      */
     public function mergeAllUsersExtras(array &$users)
     {
-        $extraUsers = $this->getAllUserExtras();
-        foreach ($extraUsers as $user => $extra) {
+        $userExtras = $this->getAllUserExtras();
+        foreach ($userExtras as $user => $extras) {
             if (isset($users[$user])) {
-                $users[$user][self::USER_EXTRAS_KEY] = $extra;
+                $users[$user][self::USER_EXTRAS_KEY] = $extras;
             }
         }
     }
