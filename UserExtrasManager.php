@@ -14,12 +14,10 @@ class UserExtrasManager
     /** The key used to store extra user data in the userdata array. */
     public const USER_EXTRAS_KEY = 'extras';
 
-    protected string $file;
+    protected string $file = DOKU_CONF . '/users.extras.php';
 
     public function __construct()
     {
-        global $conf;
-        $this->file = $conf['savedir'] . '/users.extras.php';
     }
 
     private function getFileHeader() : string
