@@ -307,6 +307,10 @@ class auth_plugin_oauth extends auth_plugin_authplain
             }
 
             if ($debugLinking) {
+                if ($isExtrasField) {
+                    $userField = UserExtrasManager::USER_EXTRAS_KEY . '.' . $userField;
+                }
+
                 Logger::debug('No user found for custom claim',
                     compact('claimName', 'userField', 'claimValue'));
             }
