@@ -249,7 +249,12 @@ class auth_plugin_oauth extends auth_plugin_authplain
 
         $mappings = array_map('trim', explode(',', $linkingClaims));
         foreach ($mappings as $mapping) {
-            list($claimName, $userField) = array_map('trim', explode(':', $mapping));
+            if (str_contains($mapping, ':')) {
+                list($claimName, $userField) = array_map('trim', explode(':', $mapping));
+            } else {
+                $claimName = $userField = $mapping;
+            }
+
             if (empty($claimName) || empty($userField) || empty($claims[$claimName])) {
                 continue;
             }
