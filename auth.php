@@ -255,11 +255,23 @@ class auth_plugin_oauth extends auth_plugin_authplain
                 $claimName = $userField = $mapping;
             }
 
-            if (empty($claimName) || empty($userField) || empty($claims[$claimName])) {
+            if (empty($claimName) || empty($userField)) {
                 continue;
             }
 
-            $claimValue = strtolower($claims[$claimName]);
+            if (str_starts_with($claimName, UserExtrasManager::USER_EXTRAS_KEY . '.')) {
+                $nestedClaimName = substr($claimName, strlen(UserExtrasManager::USER_EXTRAS_KEY) + 1);
+                $claimValue = $claims[UserExtrasManager::USER_EXTRAS_KEY][$nestedClaimName];
+            } else {
+                $claimValue = $claims[$claimName];
+            }
+
+            if (empty($claimValue)) {
+                continue;
+            }
+
+            $claimValue = strtolower($claimValue);
+
             $isExtrasField = str_starts_with($userField, UserExtrasManager::USER_EXTRAS_KEY . '.');
             if ($isExtrasField) {
                 $userField = substr($userField, strlen(UserExtrasManager::USER_EXTRAS_KEY) + 1);
