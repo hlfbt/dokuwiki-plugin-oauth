@@ -293,6 +293,11 @@ class auth_plugin_oauth extends auth_plugin_authplain
                     return $user;
                 }
             }
+
+            if ($debugLinking) {
+                Logger::debug('No user found for custom claim',
+                    compact('claimName', 'userField', 'claimValue'));
+            }
         }
 
         return false;
