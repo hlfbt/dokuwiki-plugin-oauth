@@ -16,3 +16,4 @@ $lang['register-on-auth'] = 'Register authenticated users even if self-registrat
 $lang['overwrite-groups'] = 'Overwrite all DokuWiki user groups by those supplied by provider';
 $lang['user-linking-claims'] = 'Additional user linking mappings, comma-separated (e.g. <code>nickname:user, preferred_username:user</code>). Defines which Oauth claim should be matched against which Dokuwiki user field. Matching is case-insensitive.';
 $lang['disable-mail-linking'] = 'Disable the default user linking via mail field. Only recommended when using custom linking mappings.';
+$lang['debug-user-linking'] = 'Write user linking matches to the debug log, useful for administrators to test initial configuration.';

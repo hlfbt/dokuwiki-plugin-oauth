@@ -4,6 +4,7 @@ use dokuwiki\plugin\oauth\UserExtrasManager;
 use dokuwiki\plugin\oauth\OAuthManager;
 use dokuwiki\plugin\oauth\Session;
 use dokuwiki\Subscriptions\RegistrationSubscriptionSender;
+use dokuwiki\Logger;
 use OAuth\Common\Exception\Exception as OAuthException;
 
 /**
@@ -244,6 +245,8 @@ class auth_plugin_oauth extends auth_plugin_authplain
             $this->loadUserData();
         }
 
+        $debugLinking = $this->getConf('debug-user-linking');
+
         $mappings = array_map('trim', explode(',', $linkingClaims));
         foreach ($mappings as $mapping) {
             list($claimName, $userField) = array_map('trim', explode(':', $mapping));
@@ -259,6 +262,11 @@ class auth_plugin_oauth extends auth_plugin_authplain
 
             foreach ($this->users as $user => $userinfo) {
                 if (!$isExtrasField && $userField === 'user' && $claimValue === $user) {
+                    if ($debugLinking) {
+                        Logger::debug('User matched by custom claim',
+                            compact('claimName', 'userField', 'claimValue', 'user'));
+                    }
+
                     return $user;
                 }
 
@@ -268,6 +276,15 @@ class auth_plugin_oauth extends auth_plugin_authplain
 
                 if (!empty($userinfo[$userField]) && strtolower($userinfo[$userField]) === $claimValue)
                 {
+                    if ($debugLinking) {
+                        if ($isExtrasField) {
+                            $userField = UserExtrasManager::USER_EXTRAS_KEY . '.' . $userField;
+                        }
+
+                        Logger::debug('User matched by custom claim',
+                            compact('claimName', 'userField', 'claimValue', 'user'));
+                    }
+
                     return $user;
                 }
             }

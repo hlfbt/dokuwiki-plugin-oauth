@@ -15,3 +15,4 @@ $conf['register-on-auth']    = 0;
 $conf['overwrite-groups']    = 0;
 $conf['user-linking-claims'] = '';
 $conf['disable-mail-linking'] = 0;
+$conf['debug-user-linking']  = 0;

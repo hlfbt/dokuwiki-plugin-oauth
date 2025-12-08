@@ -234,12 +234,28 @@ class OAuthManager
         global $auth;
 
         // see if the user is known already
+        $debugLinking = $auth->getConf('debug-user-linking');
+
         $localUser = $auth->getUserByCustomClaims($userdata);
+
         if (!$localUser && !$auth->getConf('disable-mail-linking')) {
             $localUser = $auth->getUserByEmail($userdata['mail']);
+
+            if ($localUser && $debugLinking) {
+                Logger::debug('User found by default email matching',
+                    array('localUser' => $localUser, 'oauthUser' => $userdata['user'], 'mail' => $userdata['mail']));
+            }
+        }
+
+        if (!$localUser && $debugLinking) {
+            Logger::debug('No existing user found for oauth login', $userdata);
         }
 
         if ($localUser) {
+            if ($debugLinking) {
+                Logger::debug('Existing user found for oauth login: ' . $localUser, $userdata);
+            }
+
             $localUserInfo = $auth->getUserData($localUser);
             $localUserInfo['user'] = $localUser;
             if (isset($localUserInfo['pass'])) unset($localUserInfo['pass']);
